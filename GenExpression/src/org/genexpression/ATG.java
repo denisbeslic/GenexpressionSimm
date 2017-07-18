@@ -8,6 +8,7 @@ public class ATG {
 	public ATG(String atnr, String atgnr) {
 		setATnr(atnr);
 		setATGnr(atgnr);
+		setPfam("");
 	}
 	
 	public ATG(String atnr, String atgnr, String protein) {
