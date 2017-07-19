@@ -1,13 +1,14 @@
 package org.genexpression;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class Lesen {
-	String m_chInput;
+	String m_Input;
 	
 	/**
 	 * Constructor with the Inputfilepath
@@ -15,7 +16,7 @@ public class Lesen {
 	 */
 	Lesen(String chInput)
 	{
-		m_chInput = chInput;	
+		m_Input = chInput;	
 	}
 	
 	
@@ -27,9 +28,9 @@ public class Lesen {
 	 */
 	public ArrayList<ATG> read () throws IOException {
 		
-		
+		//File file = new File(m_Input);
 		BufferedReader text = new BufferedReader(new InputStreamReader(
-		new FileInputStream(m_chInput), "UTF-8"));
+		new FileInputStream(m_Input), "UTF-8"));
 		
 		//create an ArrayList to save the ATG-Objects in
 		ArrayList<ATG> ATGListe = new ArrayList<ATG>();

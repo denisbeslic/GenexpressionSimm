@@ -39,8 +39,6 @@ public class GE {
 	
 	}
 	
-	
-	
 	/**
 	 * 
 	 * @param atgnr - The ATG-Number to which you want to find the prober AT-Number
