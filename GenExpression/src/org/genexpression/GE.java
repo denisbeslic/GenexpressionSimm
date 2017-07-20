@@ -67,23 +67,61 @@ public class GE {
 	
 		
 	/*
-	 * ATG zu AT Parser Tests
+	 * ATG zu Expr Parser Tests
 	 */
 	
+	String ATGfile = "C:/Users/denis/Desktop/A-AFFY-2.adf.txt";
+	String AT_Expressionfile = "C:/Users/denis/Desktop/AT40/AT40_RMA_tmt_median.txt";
 		
 	Matrix_Create matrixATG = new Matrix_Create();
-	matrixATG = ATGzuExprParser("C:/Users/denis/Desktop/A-AFFY-2.adf.txt", 
-			"C:/Users/denis/Desktop/AT40/AT40_MAS_tmt_median(2).txt");
-	matrixATG.ausgabe();
-	System.out.println(matrixATG.SucheZeile("At2g32830"));
-	System.out.println(matrixATG.matrix.get(0));
-	System.out.println(matrixATG.matrix.get(1));
-	System.out.println(matrixATG.matrix.get(2));
-	System.out.println(matrixATG.SucheZeile("AFFX-r2-At-Actin-5_s_at"));
+	matrixATG = ATGzuExprParser(ATGfile, 
+			AT_Expressionfile);
+	//matrixATG.ausgabe();
+	System.out.println(matrixATG.SucheZeile("AtCg00080"));
+	System.out.println(matrixATG.SucheZeile("AtCg00300"));
+	System.out.println(matrixATG.SucheZeile("AtCg00710"));
+	System.out.println(matrixATG.SucheZeile("AtCg00580"));
+	System.out.println(matrixATG.SucheZeile("AtCg00570"));
+	System.out.println(matrixATG.SucheZeile("AtCg00070"));
+	System.out.println(matrixATG.SucheZeile("AtCg00560"));
+	System.out.println(matrixATG.SucheZeile("AtCg00550"));
+	System.out.println(matrixATG.SucheZeile("AtCg00690"));
+	System.out.println(matrixATG.SucheZeile("AtCg00220"));
+	System.out.println(matrixATG.SucheZeile("At2g30570"));
+	System.out.println(matrixATG.SucheZeile("At2g06520"));
 	
-	matrixATG.exportMatrix("C:/Users/denis/Desktop/matrixausgabe.txt");
-	//267646_at
-	//at2g32830
+	System.out.println(matrixATG.SucheZeile("At3g10350"));
+	System.out.println(matrixATG.SucheZeile("At3g01480"));
+	System.out.println(matrixATG.SucheZeile("At1g02910"));
+	
+	System.out.println(matrixATG.SucheZeile("At2g28800"));
+	System.out.println(matrixATG.SucheZeile("At1g24490"));
+	System.out.println(matrixATG.SucheZeile("At3g15095"));
+	System.out.println(matrixATG.SucheZeile("At4g19100"));
+	System.out.println(matrixATG.SucheZeile("At1g29310"));
+	System.out.println(matrixATG.SucheZeile("At1g78720"));
+	System.out.println(matrixATG.SucheZeile("At3g48570"));
+	System.out.println(matrixATG.SucheZeile("At4g14870"));
+	
+	
+	//System.out.println(matrixATG.SucheZeile("At2g32830"));
+	//System.out.println(matrixATG.matrix.get(0));
+	//System.out.println(matrixATG.matrix.get(1));
+	//System.out.println(matrixATG.matrix.get(2));
+	//System.out.println(matrixATG.SucheZeile("AFFX-r2-At-Actin-5_s_at"));
+	
+	
+	
+	/*
+	 * ATG zu Express File Matrix exportieren in eine Text Datei
+	 */
+	
+	/*
+	matrixATG.exportMatrix("C:/Users/denis/Desktop/matrixausgabevon " 
+	+AT_Expressionfile.substring(AT_Expressionfile.lastIndexOf("/") + 1));
+	*/
+	
+	
 	}
 	
 	/**
@@ -135,7 +173,8 @@ public class GE {
 	}
 	
 	/**
-	 * 
+	 * Parses a Expressionfile-Matrix (with AT-ID and Treatments)
+	 * to a new Expressionfile-Matrix (with ATG-ID instead of AT-ID)
 	 * 
 	 * @param atgfile - Genechipfile that translates ATG to AT-ID-Numbers
 	 * @param atfile - Matrixfile with AT-ID, Treatments and Expressiondata
@@ -144,23 +183,25 @@ public class GE {
 	 */
 	
 	public static Matrix_Create ATGzuExprParser(String atgfile, String atfile) throws IOException {
+		//open the ATGfile with the translation from ATG to AT
 		Lesen ATGparse = new Lesen(atgfile);
 		ArrayList<ATG> ATGListeTest = ATGparse.read();
 		
+		//open the Expressionfilematrix
 		Matrix_Create matrixTest = new Matrix_Create();
 		matrixTest.read(atfile);
+		/*
+		 * goes through every line and translates the first Element (the AT-Number)
+		 * to his proper ATG-Number with the help of the ATGListeTest
+		 */
 		for(int r = 1; r < matrixTest.matrix.size(); r++) {
-			String at_id = "";
+			String at_id, atg_id = "";
 			at_id = matrixTest.matrix.get(r).get(0);
-			//ATGListeTest.search
-			String atg_id = "";
+			//String atg_id = "";
 			atg_id = searchATGwithAT(at_id, ATGListeTest);
 			matrixTest.matrix.get(r).set(0, atg_id);
 		}
-		
-		
 		return matrixTest;
-		
 	}
 }
 
