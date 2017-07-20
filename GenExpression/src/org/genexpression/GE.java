@@ -27,6 +27,10 @@ import java.util.ArrayList;
 public class GE {
 	
 	public static void main(String[] args) throws Exception {
+		
+	/*
+	 * ATG zu AT Parser Tests
+	 */
 	
 	//Lesen test = new Lesen("C:/Users/denis/Desktop/testSet.txt");
 	//ArrayList<ATG> ATGListeTest = test.read();
@@ -44,23 +48,52 @@ public class GE {
 	//System.out.println(searchATG("At2g32950", ATGListeTest));
 	//System.out.println(searchATG("987654321", ATGListeTest));
 	
+		
+		
+		
+	/*
+	 * AT zu Expr Parser Tests	
+	 */
 	
-	Matrix_Create matrixexp = new Matrix_Create();
-	matrixexp.read("C:/Users/denis/Desktop/matrixTestSetRMA.txt");
-	matrixexp.ausgabe();
-	//System.out.println(matrixexp.matrix.get(1).get(3));
-	//System.out.println(matrixexp.matrix.get(0).get(0) + "\n");
-	//matrixexp.SucheATnr("267608_at");
 	
+	//Matrix_Create matrixexp = new Matrix_Create();
+	//matrixexp.read("C:/Users/denis/Desktop/AT40/AT40_MAS_tmt_median(2).txt");
+	//matrixexp.ausgabe();
+
+	//System.out.println(matrixexp.SucheATnr("244902_at"));
+	//System.out.println(matrixexp.SucheATnr("AFFX-r2-At-Actin-3_s_at"));
+	//System.out.println(matrixexp.matrix.get(0));
+	
+	
+		
+	/*
+	 * ATG zu AT Parser Tests
+	 */
+	
+		
+	Matrix_Create matrixATG = new Matrix_Create();
+	matrixATG = ATGzuExprParser("C:/Users/denis/Desktop/A-AFFY-2.adf.txt", 
+			"C:/Users/denis/Desktop/AT40/AT40_MAS_tmt_median(2).txt");
+	matrixATG.ausgabe();
+	System.out.println(matrixATG.SucheZeile("At2g32830"));
+	System.out.println(matrixATG.matrix.get(0));
+	System.out.println(matrixATG.matrix.get(1));
+	System.out.println(matrixATG.matrix.get(2));
+	System.out.println(matrixATG.SucheZeile("AFFX-r2-At-Actin-5_s_at"));
+	
+	matrixATG.exportMatrix("C:/Users/denis/Desktop/matrixausgabe.txt");
+	//267646_at
+	//at2g32830
 	}
 	
 	/**
+	 * Search for a certain AT-Number with the input of the ATG-Number
 	 * 
 	 * @param atgnr - The ATG-Number to which you want to find the prober AT-Number
 	 * @param h - ArrayList of ATG-Objects (ATGnr, ATnr, pfam)
 	 * @return  a proper AT-Number as String to the given ATG-Number
 	 */
-	public static String searchATG(String atgnr, ArrayList<ATG> h) {
+	public static String searchATwithATG(String atgnr, ArrayList<ATG> h) {
 		String zielseq = "Keine passende AT-Nummer gefunden";
 		for (int i = 0; i < h.size(); i++) {
 			if(h.get(i).getATGnr().equals(atgnr)) {
@@ -72,13 +105,14 @@ public class GE {
 	}
 	
 	/**
+	 * Search of a certain ATG-Number with the input of a AT-Number
 	 * 
 	 * @param atnr - The AT-Number to which you want to find the prober ATG-Number
 	 * @param h - ArrayList of ATG-Object (ATGnr, ATnr, pfam)
 	 * @return  a prober ATG-Number as String to the given AT-Number
 	 */
-	public static String searchAT(String atnr, ArrayList<ATG> h) {
-		String zielseq = "Keine passende ATG-Nummer gefunden";
+	public static String searchATGwithAT(String atnr, ArrayList<ATG> h) {
+		String zielseq = "Keine passende ATG-Nummer gefunden zu " + atnr;
 		for(int i = 0; i < h.size(); i++) {
 			if(h.get(i).getATnr().equals(atnr)) {
 				zielseq = h.get(i).getATGnr();
@@ -100,7 +134,32 @@ public class GE {
 		}
 	}
 	
-	public static void ATGzuExprParser(String atgfile, String atfile) {
+	/**
+	 * 
+	 * 
+	 * @param atgfile - Genechipfile that translates ATG to AT-ID-Numbers
+	 * @param atfile - Matrixfile with AT-ID, Treatments and Expressiondata
+	 * @return gives Matrix with ATG-ID instead of AT-ID back
+	 * @throws IOException
+	 */
+	
+	public static Matrix_Create ATGzuExprParser(String atgfile, String atfile) throws IOException {
+		Lesen ATGparse = new Lesen(atgfile);
+		ArrayList<ATG> ATGListeTest = ATGparse.read();
+		
+		Matrix_Create matrixTest = new Matrix_Create();
+		matrixTest.read(atfile);
+		for(int r = 1; r < matrixTest.matrix.size(); r++) {
+			String at_id = "";
+			at_id = matrixTest.matrix.get(r).get(0);
+			//ATGListeTest.search
+			String atg_id = "";
+			atg_id = searchATGwithAT(at_id, ATGListeTest);
+			matrixTest.matrix.get(r).set(0, atg_id);
+		}
+		
+		
+		return matrixTest;
 		
 	}
 }

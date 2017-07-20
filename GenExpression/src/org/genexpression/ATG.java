@@ -29,6 +29,8 @@ public class ATG {
 		return Pfam;
 	}
 	
+	
+	
 	public void setATGnr(String ATGid) {
 		ATGnr = ATGid;
 	}
